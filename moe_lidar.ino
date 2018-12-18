@@ -1,7 +1,10 @@
+// SDA -> White -> A4
+// SCL -> Green -> A5
+
 #include <Wire.h>
 #include <VL53L0X.h>
 
-#define NUM_SENSORS 8
+#define NUM_SENSORS 2
 
 struct lidar {
   VL53L0X sensor;
@@ -12,23 +15,30 @@ lidar lidars[NUM_SENSORS];
 
 void setup() {
 
-  Serial.begin(9600);  
+  Serial.begin(9600);
   Wire.begin();
 
-  for (byte i = 0; i < NUM_SENSORS; i++) {
-    lidars[i].port = 3 + i;
+  for (byte i = 1; i < NUM_SENSORS; i++) {
+    lidars[i].port = 1 + i;
     pinMode(lidars[i].port, OUTPUT);
     digitalWrite(lidars[i].port, LOW); // put em into sleep mode
   }
 
   for (byte i = 0; i < NUM_SENSORS; i++) {
-    pinMode(lidars[i].port, INPUT);  // IMPORTANT-- NEVER pull pin high (5V will FRY it)
+    if (i != 0) {
+      Serial.print("pulling high");
+      Serial.print(lidars[i].port);
+      pinMode(lidars[i].port, INPUT);  // IMPORTANT-- NEVER pull pin high (5V will FRY it)
+    }
     delay(100);
+
+    lidars[i].sensor.init();
     lidars[i].sensor.setAddress(0x30 + i);
-    lidars[i].sensor.init(true);
     lidars[i].sensor.setTimeout(500);
     lidars[i].sensor.startContinuous();
   }
+
+  Serial.print("working");
 }
 
 
