@@ -45,6 +45,8 @@ void setup() {
 void loop()
 {
   for (byte i = 0; i < NUM_SENSORS; i++) {
+    Serial.print(i);
+    Serial.print("-");
     Serial.print(lidars[i].sensor.readRangeContinuousMillimeters());
     Serial.print(" ");
   }
