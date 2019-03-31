@@ -4,7 +4,7 @@
 #include <Wire.h>
 #include <VL53L0X.h>
 
-#define NUM_SENSORS 2
+#define NUM_SENSORS 1
 
 struct lidar {
   VL53L0X sensor;
@@ -26,11 +26,14 @@ void setup() {
 
   for (byte i = 0; i < NUM_SENSORS; i++) {
     if (i != 0) {
-      Serial.print("pulling high");
+      Serial.print("pulling high ");
       Serial.print(lidars[i].port);
+      Serial.println();
       pinMode(lidars[i].port, INPUT);  // IMPORTANT-- NEVER pull pin high (5V will FRY it)
     }
     delay(100);
+
+    Serial.print("test");
 
     lidars[i].sensor.init();
     lidars[i].sensor.setAddress(0x30 + i);
@@ -45,9 +48,11 @@ void setup() {
 void loop()
 {
   for (byte i = 0; i < NUM_SENSORS; i++) {
+    Serial.print(i);
+    Serial.print("-");
     Serial.print(lidars[i].sensor.readRangeContinuousMillimeters());
-    Serial.print(" ");
+    Serial.print(' ');
   }
    
-  Serial.println();
+  //Serial.println();
 }
