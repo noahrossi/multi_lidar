@@ -4,7 +4,7 @@
 #include <Wire.h>
 #include <VL53L0X.h>
 
-#define NUM_SENSORS 1
+#define NUM_SENSORS 3
 
 struct lidar {
   VL53L0X sensor;
@@ -33,11 +33,14 @@ void setup() {
     }
     delay(100);
 
-    Serial.print("test");
+    Serial.print("init");
 
     lidars[i].sensor.init();
+    Serial.print("set address");
     lidars[i].sensor.setAddress(0x30 + i);
+    Serial.print("set timeout");
     lidars[i].sensor.setTimeout(500);
+    Serial.print("start continuous");
     lidars[i].sensor.startContinuous();
   }
 
