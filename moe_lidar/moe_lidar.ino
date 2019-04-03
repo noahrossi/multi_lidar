@@ -4,7 +4,9 @@
 #include <Wire.h>
 #include <VL53L0X.h>
 
-#define NUM_SENSORS 1
+#define NUM_SENSORS 3
+
+void(* resetFunc) (void) = 0;
 
 struct lidar {
   VL53L0X sensor;
@@ -52,6 +54,10 @@ void loop()
     Serial.print("-");
     Serial.print(lidars[i].sensor.readRangeContinuousMillimeters());
     Serial.print(' ');
+    if (lidars[i].sensor.readRangeContinuousMillimeters() == 65535)
+    {
+      resetFunc();
+    }
   }
    
   //Serial.println();
