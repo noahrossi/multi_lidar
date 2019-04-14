@@ -5,6 +5,7 @@
 #include <VL53L0X.h>
 
 #define NUM_SENSORS 3
+#define MAX_OVERRUN 5
 
 void(* resetFunc) (void) = 0;
 
@@ -49,15 +50,23 @@ void setup() {
 
 void loop()
 {
+  int overrun[NUM_SENSORS];
+  
   for (byte i = 0; i < NUM_SENSORS; i++) {
     Serial.print(i);
     Serial.print("-");
     Serial.print(lidars[i].sensor.readRangeContinuousMillimeters());
-    Serial.print(' ');
+    Serial.print(" ");
     if (lidars[i].sensor.readRangeContinuousMillimeters() == 65535)
     {
-      resetFunc();
+      ++overrun[i];
+      if (overrun[i] > MAX_OVERRUN)
+      {
+        Serial.print(" RESET ");
+        resetFunc();
+      }
     }
+    else overrun[i] = 0;
   }
    
   //Serial.println();
