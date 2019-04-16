@@ -4,7 +4,7 @@
 #include <Wire.h>
 #include <VL53L0X.h>
 
-#define NUM_SENSORS 3
+#define NUM_SENSORS 1
 #define MAX_OVERRUN 5
 
 void(* resetFunc) (void) = 0;
@@ -18,7 +18,7 @@ lidar lidars[NUM_SENSORS];
 
 void setup() {
 
-  Serial.begin(9600);
+  Serial.begin(4800);
   Wire.begin();
 
   for (byte i = 1; i < NUM_SENSORS; i++) {
@@ -51,13 +51,12 @@ void setup() {
 void loop()
 {
   int overrun[NUM_SENSORS];
+  uint16_t tmp;
+  char stringy[100];
   
-  for (byte i = 0; i < NUM_SENSORS; i++) {
-    Serial.print(i);
-    Serial.print("-");
-    Serial.print(lidars[i].sensor.readRangeContinuousMillimeters());
-    Serial.print(" ");
-    if (lidars[i].sensor.readRangeContinuousMillimeters() == 65535)
+  for (int i = 0; i < NUM_SENSORS; i++) {
+    tmp = lidars[i].sensor.readRangeContinuousMillimeters();
+    if (tmp == 65535)
     {
       ++overrun[i];
       if (overrun[i] > MAX_OVERRUN)
@@ -66,7 +65,19 @@ void loop()
         resetFunc();
       }
     }
-    else overrun[i] = 0;
+    else
+    {
+      overrun[i] = 0;
+      //Serial.print(i);
+      //Serial.print("-");
+      //Serial.print(lidars[i].sensor.readRangeContinuousMillimeters());
+//      Serial.print(0);
+      sprintf(stringy,"%d-%d ",i,tmp);
+//      Serial.println("hi");
+      Serial.print(stringy);
+//      Serial.print(tmp);
+      //Serial.print(" ");
+    }
   }
    
   //Serial.println();
