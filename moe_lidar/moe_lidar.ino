@@ -18,7 +18,7 @@ lidar lidars[NUM_SENSORS];
 
 void setup() {
 
-  Serial.begin(4800);
+  Serial.begin(9600);
   Wire.begin();
 
   for (byte i = 1; i < NUM_SENSORS; i++) {
@@ -68,15 +68,10 @@ void loop()
     else
     {
       overrun[i] = 0;
-      //Serial.print(i);
-      //Serial.print("-");
-      //Serial.print(lidars[i].sensor.readRangeContinuousMillimeters());
-//      Serial.print(0);
-      sprintf(stringy,"%d-%d ",i,tmp);
-//      Serial.println("hi");
-      Serial.print(stringy);
-//      Serial.print(tmp);
-      //Serial.print(" ");
+      Serial.print(i);
+      Serial.print("-");
+      Serial.print(tmp);
+      Serial.print(" ");
     }
   }
    
